@@ -1,23 +1,27 @@
 #include <iostream>
+#include <Eigen/Dense>
+using Eigen::MatrixXd;
+
 int main()
 {
-	int a,b,c,d,e,f,g,h,i;
-	std::cout << "Este programa sirve para escalonar matrices de 3x3" << std::endl;
-	std::cout << "Ingrese la primera fila de su matriz separando cada elemento con un espacio: " << std::endl;
-	std::cin >> a;
-	std::cin >> b;
-	std::cin >> c;
-	std::cout << "Ahora la segunda fila: " << std::endl;
-	std::cin >> d;
-	std::cin >> e;
-	std::cin >> f;
-	std::cout << "Ahora la tercera fila: " << std::endl;
-	std::cin >> g;
-	std::cin >> h;
-	std::cin >> i;
-	std::cout << "Resultado:" << std::endl;
-	std::cout << a << " " << b << " " << c << std::endl;
-	std::cout << 0 << " " << a*e-d*b << " " << a*f-d*c << std::endl;
-	std::cout << 0 << " " << 0 << " " << (a*e-d*b)*(a*i-g*c)-(a*h-g*b)*(a*f-d*c) << std::endl;
-	return 0;
+	int tamaño_y;
+	std::cout << "Este programa sirve para escalonar matrices de 3 filas y n columnas" << std::endl;
+	std::cout << "Ingrese la cantidad de columnas de la matriz: " << std::endl;
+	std::cin >> tamaño_y;
+	std::cout << "Cuando se le pida que ingrese las filas debe ingresar los elementos de dicha separados por un espacio, ejemplo: 1 2 3" << std::endl;
+	MatrixXd m(3,tamaño_y);
+	for (int i = 0; i < 3; i++)
+	{
+		std::cout << "Ingrese la fila " << i+1 << " de su matriz:" << std::endl;
+		for (int j = 0; j < tamaño_y; j++)
+		{
+			std::cin >> m(i,j);
+		}
+	}
+	for (int i = 0; i < 20; i++) std::cout << '-';
+	std::cout << std::endl;
+	m.row(1) = m(0,0)*m.row(1)-m(1,0)*m.row(0);
+	m.row(2) = m(0,0)*m.row(2)-m(2,0)*m.row(0);
+	m.row(2) = (m(0,0)*m(1,1)-m(1,0)*m(0,1))*m.row(2)-(m(0,0)*m(2,1)-m(2,0)*m(0,1))*m.row(1);
+	std::cout << m << std::endl;
 }
