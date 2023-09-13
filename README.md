@@ -1,5 +1,5 @@
 # Escalonar-matrices
-Programa para escalonar matrices, por ahora solo de 3xn.
+Programa para escalonar matrices.
 ## Cómo usarlo
 El programa en sí es el main.exe y el main.out. Usar el main.exe si se está en Windows o el main.out si se esta utilizando un sistema GNU/Linux. Si se esta utilizando otra plataforma más abajo hay instrucciones para compilar manualmente el programa.
 
