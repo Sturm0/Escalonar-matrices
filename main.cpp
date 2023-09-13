@@ -1,9 +1,15 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <vector>
+/*
+ * Para hacer este programa me basé en esto (https://en.wikipedia.org/wiki/Gaussian_elimination la sección que dice "echelon form"):
+ * For each row in a matrix, if the row does not consist of only zeros, then the leftmost nonzero entry is called the leading coefficient (or pivot) of that row. 
+ * So if two leading coefficients are in the same column, then a row operation of type 3 could be used to make one of those coefficients zero.
+ *  Then by using the row swapping operation, one can always order the rows so that for every non-zero row, the leading coefficient is to the right of the leading coefficient of the row above.
+*/
 using Eigen::MatrixXd;
 int cant_filas;
-int tamaño_y;
+int cantidad_columnas;
 extern int* encontrar_pivote(MatrixXd matriz,int fila);
 
 void reordenar_filas(MatrixXd* p_matriz) {
@@ -24,7 +30,7 @@ void reordenar_filas(MatrixXd* p_matriz) {
 int* encontrar_pivote(MatrixXd matriz,int fila) {
 	//encuentra el pivote de la fila y devuelve sus coordenadas, si no encuentra nada devuelve el puntero nulo
 	int* coordenadas = new int[2];
-	for (int i = 0; i < tamaño_y; i++)
+	for (int i = 0; i < cantidad_columnas; i++)
 	{
 		if (matriz(fila,i)) {
 			coordenadas[0] = fila;
@@ -40,13 +46,13 @@ int main()
 	std::cout << "Ingrese la cantidad de filas de la matriz: " << std::endl;
 	std::cin >> cant_filas;
 	std::cout << "Ingrese la cantidad de columnas de la matriz: " << std::endl;
-	std::cin >> tamaño_y;
+	std::cin >> cantidad_columnas;
 	std::cout << "Cuando se le pida que ingrese las filas debe ingresar los elementos de dicha separados por un espacio, ejemplo: 1 2 3" << std::endl;
-	MatrixXd m(cant_filas,tamaño_y);
+	MatrixXd m(cant_filas,cantidad_columnas);
 	for (int i = 0; i < cant_filas; i++)
 	{
 		std::cout << "Ingrese la fila " << i+1 << " de su matriz:" << std::endl;
-		for (int j = 0; j < tamaño_y; j++)
+		for (int j = 0; j < cantidad_columnas; j++)
 		{
 			std::cin >> m(i,j);
 		}
@@ -57,7 +63,7 @@ int main()
 	for (;;)
 	{
 		for (int i = 0; i < cant_filas; i++) pivotes[i] = encontrar_pivote(m,i);
-		std::vector<int*> lista_coincidencias[tamaño_y];
+		std::vector<int*> lista_coincidencias[cantidad_columnas];
 		for (int i = 0; i < cant_filas; i++)
 		{
 			if (pivotes[i] == nullptr) continue;
@@ -65,13 +71,13 @@ int main()
 		}
 		//esto sirve para saber si terminar
 		int contador = 0;
-		for (int i = 0; i < tamaño_y; i++)
+		for (int i = 0; i < cantidad_columnas; i++)
 		{
-			if (lista_coincidencias[i].size() <= 1) contador++; //continuar por acá
+			if (lista_coincidencias[i].size() <= 1) contador++;
 		}
 		if (contador == cant_filas) break;
 		
-		for (int i = 0; i < tamaño_y; i++)
+		for (int i = 0; i < cantidad_columnas; i++)
 		{
 			if (lista_coincidencias[i].size() > 1) {
 				int* elemento_referencia = lista_coincidencias[i].front();
