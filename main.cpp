@@ -70,12 +70,23 @@ int main()
 			lista_coincidencias[pivotes[i][1]].push_back(pivotes[i]);
 		}
 		//esto sirve para saber si terminar
-		int contador = 0;
-		for (int i = 0; i < cantidad_columnas; i++)
+		int cant_ceros[cant_filas]; //guarda cuantos ceros hay a la izquierda de cada pivote en cada fila
+		for (int i = 0; i < cant_filas; i++) cant_ceros[i]=0;
+		
+		for (int i = 0; i < cant_filas; i++)
 		{
-			if (lista_coincidencias[i].size() <= 1) contador++;
+			for (int j = 0; j < cantidad_columnas; j++)
+			{
+				if (m(i,j)) break;
+				cant_ceros[i]++;
+			}
 		}
-		if (contador == cant_filas) break;
+		int asdf_asdf = 0; //guarda cuantas veces se dió que una fila tuviera menos ceros que su siguiente, cambiar el nombre a algo más significativo
+		for (int i = 0; i < cant_filas-1; i++)
+		{
+			if (cant_ceros[i] < cant_ceros[i+1]) asdf_asdf++;
+		}
+		if (asdf_asdf == cant_filas-1) break;
 		
 		for (int i = 0; i < cantidad_columnas; i++)
 		{
