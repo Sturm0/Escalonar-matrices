@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <vector>
+#include <cstdio>
 /*
  * Para hacer este programa me basé en esto (https://en.wikipedia.org/wiki/Gaussian_elimination la sección que dice "echelon form"):
  * For each row in a matrix, if the row does not consist of only zeros, then the leftmost nonzero entry is called the leading coefficient (or pivot) of that row. 
@@ -106,4 +107,9 @@ int main()
 	}
 	reordenar_filas(&m);
 	std::cout << m << std::endl;
+	std::cout << "Presione ENTER para cerrar el programa" << std::endl;
+	char cont;
+	std::cin.get(cont);
+	std::cin.get(cont);
+	
 }
