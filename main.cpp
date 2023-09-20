@@ -1,7 +1,6 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <vector>
-#include <cstdio>
 /*
  * Para hacer este programa me basé en esto (https://en.wikipedia.org/wiki/Gaussian_elimination la sección que dice "echelon form"):
  * For each row in a matrix, if the row does not consist of only zeros, then the leftmost nonzero entry is called the leading coefficient (or pivot) of that row. 
@@ -14,7 +13,7 @@ int cantidad_columnas;
 extern int* encontrar_pivote(MatrixXd matriz,int fila);
 
 void reordenar_filas(MatrixXd* p_matriz) {
-	//reordena las filas en la matriz final para que el pivote de una fila dada este a la derecha del de la fila anterior
+	//reordena las filas en la matriz para que el pivote de una fila dada este a la derecha del de la fila anterior
 	MatrixXd& matriz = *p_matriz;
 	MatrixXd temporal(1,matriz.cols());
 	for (int i = 0; i < matriz.rows()-1; i++)
@@ -63,6 +62,7 @@ int main()
 	int* pivotes[cant_filas];
 	for (;;)
 	{
+		reordenar_filas(&m);
 		for (int i = 0; i < cant_filas; i++) pivotes[i] = encontrar_pivote(m,i);
 		std::vector<int*> lista_coincidencias[cantidad_columnas];
 		for (int i = 0; i < cant_filas; i++)
@@ -71,6 +71,7 @@ int main()
 			lista_coincidencias[pivotes[i][1]].push_back(pivotes[i]);
 		}
 		//esto sirve para saber si terminar
+		
 		int cant_ceros[cant_filas]; //guarda cuantos ceros hay a la izquierda de cada pivote en cada fila
 		for (int i = 0; i < cant_filas; i++) cant_ceros[i]=0;
 		
@@ -105,7 +106,7 @@ int main()
 			}
 		}
 	}
-	reordenar_filas(&m);
+	
 	std::cout << m << std::endl;
 	std::cout << "Presione ENTER para cerrar el programa" << std::endl;
 	char cont;
