@@ -35,7 +35,7 @@ void reordenar_filas(MatrixXd* p_matriz) {
 	MatrixXd temporal(1,matriz.cols());
 	for (int i = 0; i < matriz.rows()-1; i++)
 	{
-		if (!encontrar_pivote(matriz,i).vacio && !encontrar_pivote(matriz,i+1).vacio && encontrar_pivote(matriz,i).columna > encontrar_pivote(matriz,i+1).columna)
+		if (encontrar_pivote(matriz,i).columna > encontrar_pivote(matriz,i+1).columna || encontrar_pivote(matriz,i).vacio || encontrar_pivote(matriz,i+1).vacio)
 		{
 			temporal = matriz.row(i);
 			matriz.row(i) = matriz.row(i+1);
@@ -61,7 +61,7 @@ bool matriz_escalonada(MatrixXd m) {
 	int asdf_asdf = 0; //guarda cuantas veces se dió que una fila tuviera menos ceros que su siguiente, cambiar el nombre a algo más significativo
 	for (int i = 0; i < cant_filas-1; i++)
 	{
-		if (cant_ceros[i] < cant_ceros[i+1]) asdf_asdf++;
+		if (cant_ceros[i] < cant_ceros[i+1] || (cant_ceros[i] == cantidad_columnas && cant_ceros[i+1] == cantidad_columnas)) asdf_asdf++;
 	}
 	if (asdf_asdf == cant_filas-1) return true;
 	return false;
@@ -89,6 +89,10 @@ int main()
 	for (;;)
 	{
 		reordenar_filas(&m);
+		std::cout << m << std::endl;
+		for (int i = 0; i < 40; i++) std::cout << "-";
+		std::cout << std::endl;
+		
 		for (int i = 0; i < cant_filas; i++) pivotes[i] = encontrar_pivote(m,i);
 		std::vector<coordenadas_pivote> lista_coincidencias[cantidad_columnas];
 		for (int i = 0; i < cant_filas; i++)
