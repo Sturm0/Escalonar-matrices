@@ -89,10 +89,6 @@ int main()
 	for (;;)
 	{
 		reordenar_filas(&m);
-		std::cout << m << std::endl;
-		for (int i = 0; i < 40; i++) std::cout << "-";
-		std::cout << std::endl;
-		
 		for (int i = 0; i < cant_filas; i++) pivotes[i] = encontrar_pivote(m,i);
 		std::vector<coordenadas_pivote> lista_coincidencias[cantidad_columnas];
 		for (int i = 0; i < cant_filas; i++)
