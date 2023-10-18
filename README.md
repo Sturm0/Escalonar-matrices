@@ -20,6 +20,4 @@ Aclaración: Esto solo es requerido en caso que no se hayan provisto los binario
 
 Usando gcc sería:
 
-`g++ -I eigen main.cpp`
-
-El archivo main.cpp y la carpeta "eigen" solo son relevantes si se planea compilar manualmente el programa, en caso que ello no le sea relevante sientase libre de eliminarlos (no afectará el funcionamiento del programa).
+`g++ main.cpp`
