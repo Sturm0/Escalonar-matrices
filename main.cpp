@@ -62,7 +62,6 @@ coordenadas_pivote encontrar_pivote(double* matriz,int fila) {
 	return coordenadas;
 }
 
-//void reordenar_filas(MatrixXd* p_matriz) {
 void reordenar_filas(double* p_matriz) {
 	//reordena las filas en la matriz para que el pivote de una fila dada este a la derecha del de la fila anterior
 	for (int i = 0; i < cant_filas-1; i++)
@@ -74,7 +73,6 @@ void reordenar_filas(double* p_matriz) {
 	}
 	
 }
-//~ bool matriz_escalonada(MatrixXd m) {
 bool matriz_escalonada(double* m) {
 	//devuelve true si la matriz argumento se encuentra escalonada, para funcionar correctamente requiere que la matriz este bien ordenada
 		
@@ -125,30 +123,31 @@ int main()
 		//~ std::cout << m << std::endl;
 		//~ std::cout << "-------------------------------------------------------------------------------------------------------" << std::endl;
 		for (int i = 0; i < cant_filas; i++) pivotes[i] = encontrar_pivote(m,i);
-		std::vector<coordenadas_pivote> lista_coincidencias[cant_columnas]; //cambiarlo para no utilizar vector, ya que no existe vector para C
-		// coordenadas_pivote* lista_coincidencias[cant_columnas]
-		// o quizá coordenadas_pivote* lista_coincidencias[cant_columnas][cant_filas], puede haber tantas coincidencias como filas haya
-		//coordenadas_pivote* lista_coincidencias[cant_columnas][cant_filas]
+		coordenadas_pivote lista_coincidencias[cant_columnas][cant_filas];
+		unsigned int cant_piv_coincidentes[cant_columnas];
+		for (int i = 0; i < cant_columnas; i++) cant_piv_coincidentes[i] = 0;
 		
 		for (int i = 0; i < cant_filas; i++)
 		{
 			if (pivotes[i].vacio) continue;
-			lista_coincidencias[pivotes[i].columna].push_back(pivotes[i]);
+			lista_coincidencias[pivotes[i].columna][i] = pivotes[i];
+			cant_piv_coincidentes[pivotes[i].columna]++;
+			
 		}
 		if (matriz_escalonada(m)) break;
 		
 		for (int i = 0; i < cant_columnas; i++)
 		{
-			if (lista_coincidencias[i].size() > 1) {
-				coordenadas_pivote elemento_referencia = lista_coincidencias[i].front();
-				lista_coincidencias[i].erase(lista_coincidencias[i].begin());
+			if (cant_piv_coincidentes[i] > 1) {
+				coordenadas_pivote elemento_referencia = lista_coincidencias[i][0];
+				
 				//y acá van las operaciones entre filas pertinentes
-				for (unsigned int j = 0; j < lista_coincidencias[i].size(); j++)
+				for (unsigned int j = 1; j < cant_piv_coincidentes[i]; j++)
 				{
 					double valor = m[lista_coincidencias[i][j].fila * cant_columnas + lista_coincidencias[i][j].columna]; //mejorar el nombre a algo más representativo
 					sumar_multiplo(m, m[elemento_referencia.fila * cant_columnas + elemento_referencia.columna] ,lista_coincidencias[i][j].fila,-valor,elemento_referencia.fila);
 				}
-				lista_coincidencias[i].clear();
+				cant_piv_coincidentes[i] = 0;
 			}
 		}
 	}
