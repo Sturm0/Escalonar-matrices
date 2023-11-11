@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include <iomanip>
 #include <cstring>
 /*
@@ -44,21 +43,20 @@ void sumar_multiplo(double* m,const double escalar1 ,const int filaA,const doubl
 	}
 }
 
-
-//~ coordenadas_pivote encontrar_pivote(MatrixXd matriz,int fila) {
 coordenadas_pivote encontrar_pivote(double* matriz,int fila) {
 	//encuentra el pivote de la fila y devuelve sus coordenadas
 	coordenadas_pivote coordenadas;
 	for (int i = 0; i < cant_columnas; i++)
 	{
-		//~ if (matriz(fila,i)) {
 		if (matriz[fila * cant_columnas + i]) {
 			coordenadas.fila = fila;
 			coordenadas.columna = i;
 			coordenadas.vacio = false;
-			break;
+			return coordenadas;
 		}
 	}
+	coordenadas.fila = fila;
+	coordenadas.columna = cant_filas;
 	return coordenadas;
 }
 
@@ -66,7 +64,7 @@ void reordenar_filas(double* p_matriz) {
 	//reordena las filas en la matriz para que el pivote de una fila dada este a la derecha del de la fila anterior
 	for (int i = 0; i < cant_filas-1; i++)
 	{
-		if (encontrar_pivote(p_matriz,i).columna > encontrar_pivote(p_matriz,i+1).columna || encontrar_pivote(p_matriz,i).vacio || encontrar_pivote(p_matriz,i+1).vacio)
+		if (encontrar_pivote(p_matriz,i).columna > encontrar_pivote(p_matriz,i+1).columna)
 		{
 			intercambiar_filas(p_matriz,i,i+1);
 		}
@@ -110,7 +108,6 @@ int main()
 		std::cout << "Ingrese la fila " << i+1 << " de su matriz:" << std::endl;
 		for (int j = 0; j < cant_columnas; j++)
 		{
-			//~ std::cin >> m(i,j);
 			std::cin >> m[i * cant_columnas + j];
 		}
 	}
@@ -120,7 +117,7 @@ int main()
 	for (;;)
 	{
 		reordenar_filas(m);
-		//~ std::cout << m << std::endl;
+		//~ mostrar(m);
 		//~ std::cout << "-------------------------------------------------------------------------------------------------------" << std::endl;
 		for (int i = 0; i < cant_filas; i++) pivotes[i] = encontrar_pivote(m,i);
 		coordenadas_pivote lista_coincidencias[cant_columnas][cant_filas];
