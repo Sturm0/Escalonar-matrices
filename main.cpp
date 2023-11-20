@@ -125,7 +125,7 @@ int main()
 		for (int i = 0; i < cant_filas; i++)
 		{
 			if (pivotes[i].vacio) continue;
-			lista_coincidencias[pivotes[i].columna][i] = pivotes[i];
+			lista_coincidencias[pivotes[i].columna][cant_piv_coincidentes[pivotes[i].columna]] = pivotes[i];
 			cant_piv_coincidentes[pivotes[i].columna]++;
 			
 		}
@@ -134,14 +134,7 @@ int main()
 		for (int i = 0; i < cant_columnas; i++)
 		{
 			if (cant_piv_coincidentes[i] > 1) {
-				//coordenadas_pivote elemento_referencia = lista_coincidencias[i][0];
-				coordenadas_pivote elemento_referencia;
-				for (int j = 0; j < cant_filas; j++)
-				{
-					if (!lista_coincidencias[i][j].vacio) elemento_referencia = lista_coincidencias[i][j];
-				}
-				
-				
+				coordenadas_pivote elemento_referencia = lista_coincidencias[i][0];
 				//y acá van las operaciones entre filas pertinentes
 				for (unsigned int j = 1; j < cant_piv_coincidentes[i]; j++)
 				{
