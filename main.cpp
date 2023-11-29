@@ -172,25 +172,28 @@ int main()
 		{
 			if (cant_piv_coincidentes[i] > 1) {
 				coordenadas_pivote elemento_referencia = lista_coincidencias[i][0];
+				double elemento_referencia_valor = m[elemento_referencia.fila * cant_columnas + elemento_referencia.columna];
 				//y acá van las operaciones entre filas pertinentes
 				for (unsigned int j = 1; j < cant_piv_coincidentes[i]; j++)
 				{
 					double valor = m[lista_coincidencias[i][j].fila * cant_columnas + lista_coincidencias[i][j].columna]; //mejorar el nombre a algo más representativo
-					//~ double el_mcm = mcm(valor,m[elemento_referencia.fila * cant_columnas + elemento_referencia.columna]);//el mínimo común múltiplo que me interesa
-					//agregar algún if para que si la entrada no es entera no intente buscar el mcm
-					double el_mcm = std::lcm((long int)valor,(long int)m[elemento_referencia.fila * cant_columnas + elemento_referencia.columna]);
-					sumar_multiplo(m, el_mcm/valor ,lista_coincidencias[i][j].fila,-el_mcm/m[elemento_referencia.fila * cant_columnas + elemento_referencia.columna],elemento_referencia.fila);
+					if (is_integer(valor) && is_integer(elemento_referencia_valor)) {
+						double el_mcm = std::lcm((long int)valor,(long int)elemento_referencia_valor);
+						sumar_multiplo(m, el_mcm/valor ,lista_coincidencias[i][j].fila,-el_mcm/elemento_referencia_valor,elemento_referencia.fila);
+					} else {
+						sumar_multiplo(m, elemento_referencia_valor ,lista_coincidencias[i][j].fila,-valor,elemento_referencia.fila);
+					}
 				}
 				cant_piv_coincidentes[i] = 0;
 			}
 		}
-		for (int i = 0; i < cant_filas; i++)
+		
+	}
+	for (int i = 0; i < cant_filas; i++)
 		{
 			double maximo_comun_divisor = gcd_arr(m+i*cant_columnas,cant_columnas);
 			if (maximo_comun_divisor) sumar_multiplo(m,1/maximo_comun_divisor,i);
 		}
-		
-	}
 	for (int i = 0; i < 100; i++) std::cout << "--";
 	std::cout << std::endl;
 	
