@@ -21,7 +21,7 @@ struct coordenadas_pivote{
 void mostrar(double* matriz) {
     for (int i = 0; i < cant_filas; i++) {
         for (int j = 0; j < cant_columnas; j++) {
-            std::cout << std::setw(20)<< matriz[i * cant_columnas + j];
+            std::cout << std::setw(15)<< matriz[i * cant_columnas + j];
         }
         std::cout << std::endl;
     }
@@ -149,10 +149,10 @@ int main()
 	coordenadas_pivote pivotes[cant_filas];
 	for (;;)
 	{
-		for (int i = 0; i < 100; i++) std::cout << "--";
-		 std::cout << std::endl;
+		//~ for (int i = 0; i < 100; i++) std::cout << "--";
+		 //~ std::cout << std::endl;
 		
-		mostrar(m);
+		//~ mostrar(m);
 		reordenar_filas(m);
 		for (int i = 0; i < cant_filas; i++) pivotes[i] = encontrar_pivote(m,i);
 		coordenadas_pivote lista_coincidencias[cant_columnas][cant_filas];
@@ -175,11 +175,11 @@ int main()
 				//y acá van las operaciones entre filas pertinentes
 				for (unsigned int j = 1; j < cant_piv_coincidentes[i]; j++)
 				{
-					long int valor = m[lista_coincidencias[i][j].fila * cant_columnas + lista_coincidencias[i][j].columna]; //mejorar el nombre a algo más representativo
+					double valor = m[lista_coincidencias[i][j].fila * cant_columnas + lista_coincidencias[i][j].columna]; //mejorar el nombre a algo más representativo
 					//~ double el_mcm = mcm(valor,m[elemento_referencia.fila * cant_columnas + elemento_referencia.columna]);//el mínimo común múltiplo que me interesa
-					double el_mcm = std::lcm(valor,(long int)m[elemento_referencia.fila * cant_columnas + elemento_referencia.columna]);
+					//agregar algún if para que si la entrada no es entera no intente buscar el mcm
+					double el_mcm = std::lcm((long int)valor,(long int)m[elemento_referencia.fila * cant_columnas + elemento_referencia.columna]);
 					sumar_multiplo(m, el_mcm/valor ,lista_coincidencias[i][j].fila,-el_mcm/m[elemento_referencia.fila * cant_columnas + elemento_referencia.columna],elemento_referencia.fila);
-					//valor es un int! fijarse si hay problema con tener un int en una división
 				}
 				cant_piv_coincidentes[i] = 0;
 			}
@@ -187,7 +187,7 @@ int main()
 		for (int i = 0; i < cant_filas; i++)
 		{
 			double maximo_comun_divisor = gcd_arr(m+i*cant_columnas,cant_columnas);
-			sumar_multiplo(m,1/maximo_comun_divisor,i);
+			if (maximo_comun_divisor) sumar_multiplo(m,1/maximo_comun_divisor,i);
 		}
 		
 	}
