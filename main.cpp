@@ -116,11 +116,11 @@ long unsigned int gcd_arr(double * n, unsigned size)
 		if (!is_integer(n[i])) return 1;
 	}
 	
-    last_gcd = std::gcd((long int)n[0], (long int)n[1]);
+    last_gcd = std::gcd(std::abs((int)n[0]), std::abs((int)n[1]));
 
     for(i=2; i < size; i++)
     {
-        last_gcd = std::gcd((long int)last_gcd, (long int)n[i]);
+        last_gcd = std::gcd(last_gcd, std::abs((int)n[i]));
     }
 
     return last_gcd;
@@ -194,10 +194,6 @@ int main()
 			double maximo_comun_divisor = gcd_arr(m+i*cant_columnas,cant_columnas);
 			if (maximo_comun_divisor) sumar_multiplo(m,1/maximo_comun_divisor,i);
 		}
-	for (int i = 0; i < 100; i++) std::cout << "--";
-	std::cout << std::endl;
-	
-	
 	mostrar(m);
 	std::cout << "Presione ENTER para cerrar el programa" << std::endl;
 	char cont;
