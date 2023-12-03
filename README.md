@@ -20,4 +20,4 @@ Aclaración: Esto solo es requerido en caso que no se hayan provisto los binario
 
 Usando gcc sería:
 
-`g++ main.cpp`
+`gcc main.c`
