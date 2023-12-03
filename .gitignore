@@ -1,2 +1,4 @@
 matriz problematica.txt
 matriz_prueba.txt
+*.o
+*.elf
