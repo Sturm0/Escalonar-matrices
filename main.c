@@ -209,12 +209,5 @@ int main()
 			double maximo_comun_divisor = gcd_arr(m+i*cant_columnas,cant_columnas);
 			if (maximo_comun_divisor) multiplicar_por_escalar(m,1/maximo_comun_divisor,i);
 		}
-	for (int i = 0; i < 30; i++) printf("-");
-	printf("\n");
-	
-	
 	mostrar(m);
-	printf("Presione ENTER para cerrar el programa\n");
-	getchar();
-	
 }
