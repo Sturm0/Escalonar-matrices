@@ -1,40 +1,38 @@
-#include <iostream>
-#include <iomanip>
-#include <cstring>
-#include <numeric>
-#include <cmath>
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdbool.h>
+#include <stdlib.h>
 /*
  * Para hacer este programa me basé en esto (https://en.wikipedia.org/wiki/Gaussian_elimination la sección que dice "echelon form"):
  * For each row in a matrix, if the row does not consist of only zeros, then the leftmost nonzero entry is called the leading coefficient (or pivot) of that row. 
  * So if two leading coefficients are in the same column, then a row operation of type 3 could be used to make one of those coefficients zero.
  *  Then by using the row swapping operation, one can always order the rows so that for every non-zero row, the leading coefficient is to the right of the leading coefficient of the row above.
 */
-//Me parece que va a ser buena idea usar una función para conseguir el máximo común divisor de una fila y así mantener los números pequeños y evitar el problema de llegar al límmite 
-//del tipo de dato que estoy usando
 int cant_filas;
 int cant_columnas;
 struct coordenadas_pivote{
 	int fila, columna;
-	bool vacio = true;
+	bool vacio;// = true;
 };
 
 void mostrar(double* matriz) {
     for (int i = 0; i < cant_filas; i++) {
         for (int j = 0; j < cant_columnas; j++) {
-            std::cout << std::setw(15)<< matriz[i * cant_columnas + j];
+            printf("%15lf",matriz[i * cant_columnas + j]);
         }
-        std::cout << std::endl;
+        printf("\n");
     }
 }
 
 void intercambiar_filas(double* m,const int filaA,const int filaB) {
 	double temporal[cant_columnas];
-	std::memcpy(temporal,m+filaA*cant_columnas,sizeof(double[cant_columnas]));
-	std::memcpy(m+filaA*cant_columnas,m+filaB*cant_columnas,sizeof(double[cant_columnas]));
-	std::memcpy(m+filaB*cant_columnas,temporal,sizeof(double[cant_columnas]));
+	memcpy(temporal,m+filaA*cant_columnas,sizeof(double[cant_columnas]));
+	memcpy(m+filaA*cant_columnas,m+filaB*cant_columnas,sizeof(double[cant_columnas]));
+	memcpy(m+filaB*cant_columnas,temporal,sizeof(double[cant_columnas]));
 }
 
-void sumar_multiplo(double* m,const double escalar1 ,const int filaA,const double escalar2 = 0,const int filaB = 0) {
+void sumar_multiplo(double* m,const double escalar1 ,const int filaA,const double escalar2,const int filaB) {
 	//suma a una fila un múltiplo de otra, también se puede usar para multiplicar una fila por un escalar
 	for (int j = 0; j < cant_columnas; j++)
 	{
@@ -47,9 +45,13 @@ void sumar_multiplo(double* m,const double escalar1 ,const int filaA,const doubl
 	}
 }
 
-coordenadas_pivote encontrar_pivote(double* matriz,int fila) {
+void multiplicar_por_escalar(double* m,const double escalar ,const int fila) {
+	//multiplica una fila por un escalar
+	sumar_multiplo(m,escalar,fila,0,0);
+}	
+struct coordenadas_pivote encontrar_pivote(double* matriz,int fila) {
 	//encuentra el pivote de la fila y devuelve sus coordenadas
-	coordenadas_pivote coordenadas;
+	struct coordenadas_pivote coordenadas;
 	for (int i = 0; i < cant_columnas; i++)
 	{
 		if (matriz[fila * cant_columnas + i]) {
@@ -102,13 +104,28 @@ bool matriz_escalonada(double* m) {
 
 bool is_integer(double k)
 {
-  return std::floor(k) == k;
+  return floor(k) == k;
 }
 
-long unsigned int gcd_arr(double * n, unsigned size)
+unsigned gcd ( unsigned a, unsigned b )
+{
+    unsigned c;
+    while ( a != 0 )
+    {
+        c = a;
+        a = b%a;
+        b = c;
+    }
+    return b;
+}
+unsigned lcm(unsigned a, unsigned b)
+{
+    return (b / gcd(a, b) ) * a;
+}
+unsigned int gcd_arr(double * n, unsigned size)
 {
 	
-    long unsigned int last_gcd, i;
+    unsigned int last_gcd, i;
     if(size < 2) return 0;
     //debería chequear que todos son enteros para buscar el máximo común divisor
 	for (unsigned int i = 0; i < size; i++)
@@ -116,11 +133,11 @@ long unsigned int gcd_arr(double * n, unsigned size)
 		if (!is_integer(n[i])) return 1;
 	}
 	
-    last_gcd = std::gcd((long int)n[0], (long int)n[1]);
+    last_gcd = gcd(abs(n[0]), abs(n[1]));
 
     for(i=2; i < size; i++)
     {
-        last_gcd = std::gcd((long int)last_gcd, (long int)n[i]);
+        last_gcd = gcd(last_gcd, abs(n[i]));
     }
 
     return last_gcd;
@@ -128,34 +145,32 @@ long unsigned int gcd_arr(double * n, unsigned size)
 
 int main()
 {
-	std::cout << "Este programa sirve para escalonar matrices de m filas y n columnas" << std::endl;
-	std::cout << "Ingrese la cantidad de filas de la matriz: " << std::endl;
-	std::cin >> cant_filas;
-	std::cout << "Ingrese la cantidad de columnas de la matriz: " << std::endl;
-	std::cin >> cant_columnas;
-	std::cout << "Cuando se le pida que ingrese las filas debe ingresar los elementos de dicha separados por un espacio, ejemplo: 1 2 3" << std::endl;
+	printf("Este programa sirve para escalonar matrices de m filas y n columnas\n");
+	printf("Ingrese la cantidad de filas de la matriz: \n");
+	scanf("%d", &cant_filas);
+	printf("Ingrese la cantidad de columnas de la matriz: \n");
+	scanf("%d", &cant_columnas);
+	printf("Cuando se le pida que ingrese las filas debe ingresar los elementos de dicha separados por un espacio, ejemplo: 1 2 3\n");
+	
 	int cant_elementos = cant_filas*cant_columnas;
 	double m[cant_elementos];
 	for (int i = 0; i < cant_filas; i++)
 	{
-		std::cout << "Ingrese la fila " << i+1 << " de su matriz:" << std::endl;
+		printf("Ingrese la fila %d de su matriz:\n",i+1);
 		for (int j = 0; j < cant_columnas; j++)
 		{
-			std::cin >> m[i * cant_columnas + j];
+			scanf("%lf", &m[i * cant_columnas + j]);
 		}
 	}
-	for (int i = 0; i < 30; i++) std::cout << '-';
-	std::cout << std::endl;
-	coordenadas_pivote pivotes[cant_filas];
+	for (int i = 0; i < 30; i++) printf("-");
+	printf("\n");
+	struct coordenadas_pivote pivotes[cant_filas];
+	for (int i = 0; i < cant_filas; i++) pivotes[i].vacio = true;
 	for (;;)
 	{
-		//~ for (int i = 0; i < 100; i++) std::cout << "--";
-		 //~ std::cout << std::endl;
-		
-		//~ mostrar(m);
 		reordenar_filas(m);
 		for (int i = 0; i < cant_filas; i++) pivotes[i] = encontrar_pivote(m,i);
-		coordenadas_pivote lista_coincidencias[cant_columnas][cant_filas];
+		struct coordenadas_pivote lista_coincidencias[cant_columnas][cant_filas];
 		unsigned int cant_piv_coincidentes[cant_columnas];
 		for (int i = 0; i < cant_columnas; i++) cant_piv_coincidentes[i] = 0;
 		
@@ -171,14 +186,14 @@ int main()
 		for (int i = 0; i < cant_columnas; i++)
 		{
 			if (cant_piv_coincidentes[i] > 1) {
-				coordenadas_pivote elemento_referencia = lista_coincidencias[i][0];
+				struct coordenadas_pivote elemento_referencia = lista_coincidencias[i][0];
 				double elemento_referencia_valor = m[elemento_referencia.fila * cant_columnas + elemento_referencia.columna];
 				//y acá van las operaciones entre filas pertinentes
 				for (unsigned int j = 1; j < cant_piv_coincidentes[i]; j++)
 				{
 					double valor = m[lista_coincidencias[i][j].fila * cant_columnas + lista_coincidencias[i][j].columna]; //mejorar el nombre a algo más representativo
 					if (is_integer(valor) && is_integer(elemento_referencia_valor)) {
-						double el_mcm = std::lcm((long int)valor,(long int)elemento_referencia_valor);
+						double el_mcm = lcm((long int)valor,(long int)elemento_referencia_valor);
 						sumar_multiplo(m, el_mcm/valor ,lista_coincidencias[i][j].fila,-el_mcm/elemento_referencia_valor,elemento_referencia.fila);
 					} else {
 						sumar_multiplo(m, elemento_referencia_valor ,lista_coincidencias[i][j].fila,-valor,elemento_referencia.fila);
@@ -192,16 +207,14 @@ int main()
 	for (int i = 0; i < cant_filas; i++)
 		{
 			double maximo_comun_divisor = gcd_arr(m+i*cant_columnas,cant_columnas);
-			if (maximo_comun_divisor) sumar_multiplo(m,1/maximo_comun_divisor,i);
+			if (maximo_comun_divisor) multiplicar_por_escalar(m,1/maximo_comun_divisor,i);
 		}
-	for (int i = 0; i < 100; i++) std::cout << "--";
-	std::cout << std::endl;
+	for (int i = 0; i < 30; i++) printf("-");
+	printf("\n");
 	
 	
 	mostrar(m);
-	std::cout << "Presione ENTER para cerrar el programa" << std::endl;
-	char cont;
-	std::cin.get(cont);
-	std::cin.get(cont);
+	printf("Presione ENTER para cerrar el programa\n");
+	getchar();
 	
 }
